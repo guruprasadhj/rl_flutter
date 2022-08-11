@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:api_cache_manager/models/cache_db_model.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:hive/hive.dart';
 
 // ////////////////////////// Fetch DATA Page ////////////////////////////
 
@@ -23,7 +21,7 @@ class _DataLoaderPageState extends State<DataLoaderPage> {
 
   loadJson() async {
     setState(() {
-      isClicked=true;
+      isClicked = true;
     });
     var response =
         await http.get(Uri.parse("https://api.publicapis.org/entries"));
@@ -40,12 +38,8 @@ class _DataLoaderPageState extends State<DataLoaderPage> {
     print("Data Save");
   }
 
-
-
   bool hasData = false;
   bool isClicked = false;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +63,9 @@ class _DataLoaderPageState extends State<DataLoaderPage> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: _displayData.isEmpty
-              ? !isClicked?SizedBox():Center(child: CircularProgressIndicator())
+              ? !isClicked
+                  ? SizedBox()
+                  : Center(child: CircularProgressIndicator())
               : ListView.builder(
                   itemCount: _displayData.length,
                   itemBuilder: (context, index) {
@@ -104,19 +100,19 @@ class _DataLoaderPageState extends State<DataLoaderPage> {
                                               Text(
                                                 _displayData[index]["API"],
                                                 style: GoogleFonts.roboto(
-                                                  textStyle: TextStyle(
+                                                  textStyle: const TextStyle(
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       letterSpacing: .5),
                                                 ),
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                               Text(_displayData[index]
                                                   ["Category"]),
                                             ],
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                           RichText(
@@ -125,7 +121,7 @@ class _DataLoaderPageState extends State<DataLoaderPage> {
                                                 StrutStyle(fontSize: 12.0),
                                             text: TextSpan(
                                                 style: GoogleFonts.roboto(
-                                                  textStyle: TextStyle(
+                                                  textStyle: const TextStyle(
                                                       color: Colors.grey,
                                                       fontWeight:
                                                           FontWeight.normal),
@@ -155,12 +151,4 @@ class _DataLoaderPageState extends State<DataLoaderPage> {
       ),
     );
   }
-}
-
-class Entry {
-  late final String api;
-  late final String description;
-  late final String link;
-  late final String category;
-  Entry(this.api, this.description, this.link, this.category);
 }

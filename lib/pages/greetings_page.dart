@@ -15,9 +15,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:vector_math/vector_math.dart';
 import 'dart:math' show sin, cos, sqrt, atan2;
 
-
 import '../services/network_status_service.dart';
 import '../widget/network_aware_widget.dart';
+
+// ////////////////////////// Greetings Page ////////////////////////////
 
 class Greetings extends StatefulWidget {
   const Greetings({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _GreetingsState extends State<Greetings> {
   late StreamSubscription internetSubscription;
   ConnectivityResult result = ConnectivityResult.none;
 
-  bool isclicked =false;
+  bool isclicked = false;
   bool servicestatus = false;
   bool haspermission = false;
   late LocationPermission permission;
@@ -43,34 +44,34 @@ class _GreetingsState extends State<Greetings> {
   late StreamSubscription<Position> positionStream;
 
   checkGps() async {
-    setState((){
-      isclicked=true;
+    setState(() {
+      isclicked = true;
     });
     servicestatus = await Geolocator.isLocationServiceEnabled();
-    if(servicestatus){
+    if (servicestatus) {
       permission = await Geolocator.checkPermission();
 
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           print('Location permissions are denied');
-        }else if(permission == LocationPermission.deniedForever){
+        } else if (permission == LocationPermission.deniedForever) {
           print("'Location permissions are permanently denied");
-        }else{
+        } else {
           haspermission = true;
         }
-      }else{
+      } else {
         haspermission = true;
       }
 
-      if(haspermission){
+      if (haspermission) {
         setState(() {
           //refresh the UI
         });
 
         getLocation();
       }
-    }else{
+    } else {
       print("GPS Service is not enabled, turn on GPS location");
     }
 
@@ -78,8 +79,10 @@ class _GreetingsState extends State<Greetings> {
       //refresh the UI
     });
   }
+
   getLocation() async {
-    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     print(position.longitude); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
@@ -87,24 +90,26 @@ class _GreetingsState extends State<Greetings> {
     lat = position.latitude.toString();
     double earthRadius = 6371000;
 
-    var userLat=position.latitude;
-    var userLong =position.longitude;
+    var userLat = position.latitude;
+    var userLong = position.longitude;
 
     var givenLat = 37.0902;
     var givenlong = -95.7129;
-    print(long+" , "+lat);
+    //print(long + " , " + lat);
     var dlong = givenlong - userLong;
     var dlat = givenLat - userLat;
-  print(dlong.toString()+" "+dlat.toString());
+    //print(dlong.toString() + " " + dlat.toString());
     var dLat = radians(givenlong - userLong);
     var dLng = radians(givenLat - userLat);
-    var a = sin(dLat/2) * sin(dLat/2) + cos(radians(userLat))
-        * cos(radians(givenLat)) * sin(dLng/2) * sin(dLng/2);
-    var c = 2 * atan2(sqrt(a), sqrt(1-a));
-    var d = earthRadius * c;
-    print(d/1000);
-    distance = (d/1000).toString();
-
+    var a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(radians(userLat)) *
+            cos(radians(givenLat)) *
+            sin(dLng / 2) *
+            sin(dLng / 2);
+    var c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    var meterDistance = earthRadius * c;
+    //print(meterDistance/1000);
+    distance = (meterDistance / 1000).toString();
 
     setState(() {
       //refresh UI
@@ -115,11 +120,11 @@ class _GreetingsState extends State<Greetings> {
       distanceFilter: 100,
     );
 
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
-        locationSettings: locationSettings).listen((Position position) {
+    StreamSubscription<Position> positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
       print(position.longitude);
       print(position.latitude);
-
 
       long = position.longitude.toString();
       lat = position.latitude.toString();
@@ -129,6 +134,7 @@ class _GreetingsState extends State<Greetings> {
       });
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -148,7 +154,6 @@ class _GreetingsState extends State<Greetings> {
   }
 
   void getCurrentLocation() async {
-    // var position = await Geolocator.getCurrentPosition()
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
   }
 
@@ -156,9 +161,10 @@ class _GreetingsState extends State<Greetings> {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     var timeNow = int.parse(DateFormat('kk').format(now));
-    clearData()async{
+    clearData() async {
       await APICacheManager().deleteCache("KEY");
     }
+
     if (timeNow <= 12) {
       message = 'Morning';
     } else if ((timeNow > 12) && (timeNow <= 16)) {
@@ -183,7 +189,6 @@ class _GreetingsState extends State<Greetings> {
                   fontWeight: FontWeight.w600,
                   fontSize: 35,
                   letterSpacing: 0.27,
-                  //color: DesignCourseAppTheme.darkerText,
                 ),
               ),
               const SizedBox(
@@ -199,7 +204,7 @@ class _GreetingsState extends State<Greetings> {
                           children: const [
                             Icon(
                               Icons.circle,
-                              color: Color(0xff00FF00),
+                              color: Color.fromARGB(255, 0, 216, 0),
                               size: 15,
                             ),
                             Text(" Online")
@@ -209,7 +214,7 @@ class _GreetingsState extends State<Greetings> {
                           children: const [
                             Icon(
                               Icons.circle,
-                              color: Color(0xffFF0000),
+                              color: Color.fromARGB(255, 174, 0, 0),
                               size: 15,
                             ),
                             Text(" Offline")
@@ -217,13 +222,18 @@ class _GreetingsState extends State<Greetings> {
                         )
                 ],
               ),
-              SizedBox(height: 50,),
+              const SizedBox(
+                height: 50,
+              ),
               const Padding(
                 padding: EdgeInsets.all(20.0),
-                child: Icon(Icons.my_location,size: 50,),
+                child: Icon(
+                  Icons.my_location,
+                  size: 50,
+                ),
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   isclicked = true;
                   checkGps();
                 },
@@ -235,24 +245,33 @@ class _GreetingsState extends State<Greetings> {
                     color: Color(0xff2196F3),
                     borderRadius: BorderRadius.circular(18.0),
                   ),
-                  child: Text("Get Location",style: TextStyle(color: Color(0xffFFFFFF)),),
+                  child: const Text(
+                    "Get Location",
+                    style: TextStyle(color: Color(0xffFFFFFF)),
+                  ),
                 ),
               ),
-              isclicked?
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Column(
-                    children: [
-
-                      Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
-                      Text(haspermission? "GPS has permission": "GPS permission is disabled."),
-
-                      Text("Current Longitude: $long", style:TextStyle(fontSize: 20)),
-                      Text("Current Latitude: $lat", style: TextStyle(fontSize: 20),),
-                      Text("The distance between users location and lat-long 37.0902°N, 95.7129 W is $distance Kilometers"),
-                    ]
-                ),
-              ):SizedBox(),
+              isclicked
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      child: Column(children: [
+                        Text(servicestatus
+                            ? "GPS is Enabled"
+                            : "GPS is disabled."),
+                        Text(haspermission
+                            ? "GPS has permission"
+                            : "GPS permission is disabled."),
+                        Text("Current Longitude: $long",
+                            style: TextStyle(fontSize: 20)),
+                        Text(
+                          "Current Latitude: $lat",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Text(
+                            "The distance between users location and lat-long 37.0902°N, 95.7129 W is $distance Kilometers"),
+                      ]),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
@@ -263,7 +282,7 @@ class _GreetingsState extends State<Greetings> {
         label: Text("Clear Data"),
         backgroundColor: Color(0xff2196F3),
         foregroundColor: Color(0xffFFFFFF),
-        onPressed: (){
+        onPressed: () {
           clearData();
         },
       ),

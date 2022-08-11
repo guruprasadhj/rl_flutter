@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rl_flutter/pages/data_loadings_page.dart';
-import 'package:rl_flutter/pages/greetings.dart';
-import 'package:rl_flutter/pages/webview.dart';
-
-import 'offline_data_Page.dart';
+import 'package:rl_flutter/pages/first_page.dart';
+import 'package:rl_flutter/pages/greetings_page.dart';
+import 'package:rl_flutter/pages/webview_page.dart';
+import 'package:rl_flutter/pages/search_page.dart';
 
 // ////////////////////////// BOTTOM NAVIGATION BAR ////////////////////////////
 class MyHomePage extends StatefulWidget {

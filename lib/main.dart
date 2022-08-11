@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rl_flutter/pages/bottom_navigation.dart';
-import 'package:hive/hive.dart';
 
-void main()async {
-
+void main() async {
   runApp(const MyApp());
 }
 
@@ -22,4 +20,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
